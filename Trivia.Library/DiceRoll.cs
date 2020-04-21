@@ -1,5 +1,5 @@
 ﻿
-namespace trivia
+namespace Trivia
 {
     public enum DiceRoll
     {

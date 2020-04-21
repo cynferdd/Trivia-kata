@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace trivia
+namespace Trivia
 {
     public static class EnumerableExtension
     {
