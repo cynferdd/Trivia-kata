@@ -15,18 +15,18 @@ namespace Trivia
         private static readonly Category sports = new Category("Sports");
         private static readonly Category rock = new Category("Rock");
 
-        private readonly Dictionary<Player, CircularIterator<int>> places;
-
         
 
-        CircularIterator<Player> playersStatus = new CircularIterator<Player>();
 
-        Deck popDeck = new Deck(pop);
-        Deck scienceDeck = new Deck(science);
-        Deck sportsDeck = new Deck(sports);
-        Deck rockDeck = new Deck(rock);
 
-        private IReadOnlyDictionary<Category,Deck> deckByCategory;
+        private readonly CircularIterator<Player> playersStatus = new CircularIterator<Player>();
+
+        private readonly Deck popDeck = new Deck(pop);
+        private readonly Deck scienceDeck = new Deck(science);
+        private readonly Deck sportsDeck = new Deck(sports);
+        private readonly Deck rockDeck = new Deck(rock);
+
+        private readonly IReadOnlyDictionary<Category,Deck> deckByCategory;
 
         private readonly CircularIterator<Category> gameBoard = new CircularIterator<Category>();
 
@@ -36,7 +36,6 @@ namespace Trivia
         private Game(IReadOnlyList<string> players)
         {
 
-            places = new Dictionary<Player, CircularIterator<int>>();
             var decks = new[] { popDeck, scienceDeck, sportsDeck, rockDeck };
             deckByCategory = decks.ToDictionary(d => d.Category);
 
@@ -50,8 +49,6 @@ namespace Trivia
 
             for (int i = 0; i < playersStatus.Count; i++)
             {
-
-                places.Add(playersStatus[i], Enumerable.Range(0, gameBoard.Count).ToCircular());
 
                 Console.WriteLine(playersStatus[i].Name + " was Added");
                 Console.WriteLine("They are player number " + i);
@@ -111,11 +108,12 @@ namespace Trivia
 
         private void Move(int roll)
         {
-            places[playersStatus.Current].Move(roll);
+            playersStatus.Current.Position = gameBoard.GetIndex(roll + playersStatus.Current.Position);
+            
 
             Console.WriteLine(playersStatus.Current.Name
                                         + "'s new location is "
-                                        + places[playersStatus.Current].Current);
+                                        + playersStatus.Current.Position);
             Console.WriteLine("The category is " + CurrentCategory());
         }
 
@@ -129,7 +127,7 @@ namespace Trivia
 
         public Category CurrentCategory()
         {
-            return gameBoard[places[playersStatus.Current].Current];
+            return gameBoard[playersStatus.Current.Position];
         }
 
         public bool WasCorrectlyAnswered()
@@ -161,7 +159,7 @@ namespace Trivia
                     + " Gold Coins.");
         }
 
-        public bool WrongAnswer()
+        public bool WasWronglyAnswered()
         {
             Console.WriteLine("Question was incorrectly answered");
             Console.WriteLine(playersStatus.Current.Name + " was sent to the penalty box");

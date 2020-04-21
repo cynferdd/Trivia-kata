@@ -8,8 +8,10 @@ namespace trivia
     {
         private readonly IReadOnlyList<T> source;
 
+        
+
         public T Current => this.source[index];
-        public T this[int i] => this.source[i];
+        public T this[int i] => this.source[i % Count];
 
         private int index;
 
@@ -28,9 +30,13 @@ namespace trivia
 
         public void Move(int step)
         {
-            this.index = (index + step) % this.source.Count;
+            this.index = (index + step) % Count;
         }
 
+        public int GetIndex(int i)
+        {
+            return i % Count;
+        }
 
     }
 }

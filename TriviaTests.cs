@@ -70,7 +70,7 @@ namespace Trivia
             Game game = new Game("Patrick", "Isabelle");
             // Patrick
             game.Roll(DiceRoll.One);
-            game.WrongAnswer();
+            game.WasWronglyAnswered();
             // Isabelle
             game.Roll(DiceRoll.One);
             game.WasCorrectlyAnswered();
@@ -99,7 +99,7 @@ namespace Trivia
             Game game = new Game("Patrick", "Isabelle");
             // Patrick
             game.Roll(DiceRoll.One);
-            game.WrongAnswer();
+            game.WasWronglyAnswered();
             // Isabelle
             game.Roll(DiceRoll.One);
             game.WasCorrectlyAnswered();
@@ -188,7 +188,7 @@ namespace Trivia
         {
             Game game = new Game("Patrick", "Isabelle");
             game.Roll(DiceRoll.One);
-            game.WrongAnswer();
+            game.WasWronglyAnswered();
             Assert.True(game.GetPlayerStatus(0).IsInPenaltyBox);
         }
 
@@ -197,11 +197,11 @@ namespace Trivia
         {
             Game game = new Game("Patrick", "Isabelle");
             game.Roll(DiceRoll.One);
-            game.WrongAnswer();
+            game.WasWronglyAnswered();
             game.Roll(DiceRoll.One);
             game.WasCorrectlyAnswered();
             game.Roll(DiceRoll.One);
-            game.WrongAnswer();
+            game.WasWronglyAnswered();
             Assert.True(game.GetPlayerStatus(0).IsInPenaltyBox);
         }
 
@@ -210,7 +210,7 @@ namespace Trivia
         {
             Game game = new Game("Patrick", "Isabelle");
             game.Roll(DiceRoll.One);
-            game.WrongAnswer();
+            game.WasWronglyAnswered();
             game.Roll(DiceRoll.One);
             game.WasCorrectlyAnswered();
             game.Roll(DiceRoll.One);
@@ -223,7 +223,7 @@ namespace Trivia
         {
             Game game = new Game("Patrick", "Isabelle");
             game.Roll(DiceRoll.One);
-            game.WrongAnswer();
+            game.WasWronglyAnswered();
             game.Roll(DiceRoll.One);
             game.WasCorrectlyAnswered();
             game.Roll(DiceRoll.Two);
