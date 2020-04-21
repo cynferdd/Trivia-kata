@@ -9,18 +9,14 @@ namespace Trivia
     {
         public static void Main() { }
 
-
-        private const int TotalPlaces = 12;
-        private const int MaxNbPlayers = 6;
         private const int VictoryPurseAmount = 6;
         private static readonly Category pop = new Category("Pop");
         private static readonly Category science = new Category("Science");
         private static readonly Category sports = new Category("Sports");
         private static readonly Category rock = new Category("Rock");
 
-        // TODO : mettre en place le plateau de jeu avec la logique de circularité des cases => CircularIterator<Category>
+        private readonly Dictionary<Player, CircularIterator<int>> places;
 
-        public CircularIterator<int>[] places = new CircularIterator<int>[MaxNbPlayers];
         
 
         CircularIterator<Player> playersStatus = new CircularIterator<Player>();
@@ -34,30 +30,32 @@ namespace Trivia
 
         private readonly CircularIterator<Category> gameBoard = new CircularIterator<Category>();
 
-        int currentPlayer = 0;
 
         public Player GetPlayerStatus(int i) => playersStatus[i];
 
         private Game(IReadOnlyList<string> players)
         {
+
+            places = new Dictionary<Player, CircularIterator<int>>();
             var decks = new[] { popDeck, scienceDeck, sportsDeck, rockDeck };
             deckByCategory = decks.ToDictionary(d => d.Category);
-            
-            for (int i = 0; i<players.Count; i++)
-            {
 
-                places[i] = Enumerable.Range(0, TotalPlaces).ToCircular();
-
-                Console.WriteLine(players[i] + " was Added");
-                Console.WriteLine("They are player number " + i);
-            }
-
-            playersStatus = players.Select(p => new Player(p)).ToCircular();
-            gameBoard = 
+            gameBoard =
                 Enumerable
                     .Repeat(decks.Select(d => d.Category), 3)
                     .Flatten()
                     .ToCircular();
+
+            playersStatus = players.Select(p => new Player(p)).ToCircular();
+
+            for (int i = 0; i < playersStatus.Count; i++)
+            {
+
+                places.Add(playersStatus[i], Enumerable.Range(0, gameBoard.Count).ToCircular());
+
+                Console.WriteLine(playersStatus[i].Name + " was Added");
+                Console.WriteLine("They are player number " + i);
+            }
 
         }
 
@@ -113,11 +111,11 @@ namespace Trivia
 
         private void Move(int roll)
         {
-            places[currentPlayer].Move(roll);
+            places[playersStatus.Current].Move(roll);
 
             Console.WriteLine(playersStatus.Current.Name
                                         + "'s new location is "
-                                        + places[currentPlayer].Current);
+                                        + places[playersStatus.Current].Current);
             Console.WriteLine("The category is " + CurrentCategory());
         }
 
@@ -131,7 +129,7 @@ namespace Trivia
 
         public Category CurrentCategory()
         {
-            return gameBoard[places[currentPlayer].Current];
+            return gameBoard[places[playersStatus.Current].Current];
         }
 
         public bool WasCorrectlyAnswered()
@@ -175,7 +173,6 @@ namespace Trivia
         private void GoToNextPlayer()
         {
             playersStatus.Move(1);
-            currentPlayer = (currentPlayer + 1) % playersStatus.Count;
         }
 
         private bool ShouldContinueGame()
