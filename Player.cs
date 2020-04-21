@@ -12,7 +12,6 @@ namespace trivia
 
         public bool IsInPenaltyBox { get; set; }
 
-        public int Position { get; set; }
 
         public Player(string name)
         {

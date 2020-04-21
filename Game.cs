@@ -18,7 +18,7 @@ namespace Trivia
         private static readonly Category sports = new Category("Sports");
         private static readonly Category rock = new Category("Rock");
 
-        // TODO : mettre en place le plateau de jeu avec la logique de circularité des case => CircularIterator<Category>
+        // TODO : mettre en place le plateau de jeu avec la logique de circularité des cases => CircularIterator<Category>
 
         public CircularIterator<int>[] places = new CircularIterator<int>[MaxNbPlayers];
         
@@ -31,7 +31,8 @@ namespace Trivia
         Deck rockDeck = new Deck(rock);
 
         private IReadOnlyDictionary<Category,Deck> deckByCategory;
-        private IReadOnlyList<Category> categories;
+
+        private readonly CircularIterator<Category> gameBoard = new CircularIterator<Category>();
 
         int currentPlayer = 0;
 
@@ -41,18 +42,23 @@ namespace Trivia
         {
             var decks = new[] { popDeck, scienceDeck, sportsDeck, rockDeck };
             deckByCategory = decks.ToDictionary(d => d.Category);
-            categories = decks.Select(d => d.Category).ToArray();
             
             for (int i = 0; i<players.Count; i++)
             {
 
-                places[i] = new CircularIterator<int>(Enumerable.Range(0, TotalPlaces).ToList());
+                places[i] = Enumerable.Range(0, TotalPlaces).ToCircular();
 
                 Console.WriteLine(players[i] + " was Added");
                 Console.WriteLine("They are player number " + i);
             }
 
-            playersStatus = new CircularIterator<Player>(players.Select(p => new Player(p)).ToList());
+            playersStatus = players.Select(p => new Player(p)).ToCircular();
+            gameBoard = 
+                Enumerable
+                    .Repeat(decks.Select(d => d.Category), 3)
+                    .Flatten()
+                    .ToCircular();
+
         }
 
         public Game(string player1, string player2)
@@ -125,8 +131,7 @@ namespace Trivia
 
         public Category CurrentCategory()
         {
-            var index = places[currentPlayer].Current % categories.Count;
-            return categories[index];
+            return gameBoard[places[currentPlayer].Current];
         }
 
         public bool WasCorrectlyAnswered()
