@@ -10,25 +10,16 @@ namespace Trivia
         public static void Main() { }
 
         private const int VictoryPurseAmount = 6;
-        private static readonly Category pop = new Category("Pop");
-        private static readonly Category science = new Category("Science");
-        private static readonly Category sports = new Category("Sports");
-        private static readonly Category rock = new Category("Rock");
-
-        
-
 
 
         private readonly CircularIterator<Player> playersStatus = new CircularIterator<Player>();
 
-        private readonly Deck popDeck = new Deck(pop);
-        private readonly Deck scienceDeck = new Deck(science);
-        private readonly Deck sportsDeck = new Deck(sports);
-        private readonly Deck rockDeck = new Deck(rock);
+        private readonly Deck popDeck = new Deck("Pop");
+        private readonly Deck scienceDeck = new Deck("Science");
+        private readonly Deck sportsDeck = new Deck("Sports");
+        private readonly Deck rockDeck = new Deck("Rock");
 
-        private readonly IReadOnlyDictionary<Category,Deck> deckByCategory;
-
-        private readonly CircularIterator<Category> gameBoard = new CircularIterator<Category>();
+        private readonly CircularIterator<Deck> gameBoard = new CircularIterator<Deck>();
 
 
         public Player GetPlayerStatus(int i) => playersStatus[i];
@@ -37,11 +28,10 @@ namespace Trivia
         {
 
             var decks = new[] { popDeck, scienceDeck, sportsDeck, rockDeck };
-            deckByCategory = decks.ToDictionary(d => d.Category);
 
             gameBoard =
                 Enumerable
-                    .Repeat(decks.Select(d => d.Category), 3)
+                    .Repeat(decks, 3)
                     .Flatten()
                     .ToCircular();
 
@@ -114,20 +104,20 @@ namespace Trivia
             Console.WriteLine(playersStatus.Current.Name
                                         + "'s new location is "
                                         + playersStatus.Current.Position);
-            Console.WriteLine("The category is " + CurrentCategory());
+            Console.WriteLine("The category is " + gameBoard[playersStatus.Current.Position].Category);
         }
 
         private void AskQuestion()
         {
             Console.WriteLine(
-                deckByCategory[CurrentCategory()]
+                gameBoard[playersStatus.Current.Position]
                 .PickQuestion());
         }
 
 
-        public Category CurrentCategory()
+        public string CurrentCategory()
         {
-            return gameBoard[playersStatus.Current.Position];
+            return gameBoard[playersStatus.Current.Position].Category;
         }
 
         public bool WasCorrectlyAnswered()

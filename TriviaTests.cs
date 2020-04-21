@@ -114,48 +114,47 @@ namespace Trivia
         [Fact]
         public void ShouldHavePopCategory_WhenRoll4()
         {
-            Category pop = new Category("Pop");
             Game game = new Game("Patrick", "Isabelle");
             // Patrick
             game.Roll(DiceRoll.Four);
-            Category actual = game.CurrentCategory();
+            var actual = game.CurrentCategory();
 
-            Assert.Equal(pop, actual);
+            Assert.Equal("Pop", actual);
         }
 
         [Fact]
         public void ShouldHaveScienceCategory_WhenRoll1()
         {
-            Category science = new Category("Science");
+            
             Game game = new Game("Patrick", "Isabelle");
             // Patrick
             game.Roll(DiceRoll.One);
-            Category actual = game.CurrentCategory();
+            var actual = game.CurrentCategory();
 
-            Assert.Equal(science, actual);
+            Assert.Equal("Science", actual);
         }
 
         [Fact]
         public void ShouldHaveSportCategory_WhenRoll2()
         {
-            Category sport = new Category("Sports");
+            
             Game game = new Game("Patrick", "Isabelle");
             // Patrick
             game.Roll(DiceRoll.Two);
-            Category actual = game.CurrentCategory();
+            var actual = game.CurrentCategory();
 
-            Assert.Equal(sport, actual);
+            Assert.Equal("Sports", actual);
         }
         [Fact]
         public void ShouldHaveRockCategory_WhenRoll3()
         {
-            Category rock = new Category("Rock");
+            
             Game game = new Game("Patrick", "Isabelle");
             // Patrick
             game.Roll(DiceRoll.Three);
-            Category actual = game.CurrentCategory();
+            var actual = game.CurrentCategory();
 
-            Assert.Equal(rock, actual);
+            Assert.Equal("Rock", actual);
         }
 
         [Fact]

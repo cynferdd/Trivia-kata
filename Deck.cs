@@ -6,17 +6,17 @@ namespace trivia
 {
     public class Deck
     {
-        public Category Category { get; }
+        public string Category { get; }
 
         private readonly Stack<string> questions = new Stack<string>();
 
-        public Deck(Category category)
+        public Deck(string categoryName)
         {
-            Category = category;
+            Category = categoryName;
             
             this.questions = new Stack<string>(
                 Enumerable.Range(0, 50)
-                    .Select(i => $"{Category.Name} Question {i}"));
+                    .Select(i => $"{Category} Question {i}"));
         }
 
         public string PickQuestion() => questions.Pop();
