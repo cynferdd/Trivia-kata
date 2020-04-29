@@ -12,7 +12,8 @@ namespace Trivia.Test
         [Fact]
         public void ShouldGetOutOfPenaltyBox_WhenRollIsOddAndAnswerCorrect()
         {
-            Game game = new Game("Patrick", "Isabelle");
+            
+            Game game = Game.OfTwoPlayers("Patrick", "Isabelle").Build();
             // Patrick
             game.Roll(DiceRoll.One);
             game.WasWronglyAnswered();
@@ -30,7 +31,8 @@ namespace Trivia.Test
         [Fact]
         public void ShouldGainCoin_WhenAnswerIsCorrect()
         {
-            Game game = new Game("Patrick", "Isabelle");
+            Game game = Game.OfTwoPlayers("Patrick", "Isabelle").Build();
+            
             // Patrick
             game.Roll(DiceRoll.One);
             game.WasCorrectlyAnswered();
@@ -41,7 +43,7 @@ namespace Trivia.Test
         [Fact]
         public void ShouldGainCoin_WhenFirstAnswerIsWrongAndSecondAnswerIsCorrect()
         {
-            Game game = new Game("Patrick", "Isabelle");
+            Game game = Game.OfTwoPlayers("Patrick", "Isabelle").Build();
 
             // Patrick
             game.Roll(DiceRoll.One);
@@ -60,7 +62,7 @@ namespace Trivia.Test
         [Fact]
         public void ShouldHavePopCategory_WhenRoll4()
         {
-            Game game = new Game("Patrick", "Isabelle");
+            Game game = Game.OfTwoPlayers("Patrick", "Isabelle").Build();
 
             // Patrick
             game.Roll(DiceRoll.Four);
@@ -73,7 +75,7 @@ namespace Trivia.Test
         public void ShouldHaveScienceCategory_WhenRoll1()
         {
             
-            Game game = new Game("Patrick", "Isabelle");
+            Game game = Game.OfTwoPlayers("Patrick", "Isabelle").Build();
 
             // Patrick
             game.Roll(DiceRoll.One);
@@ -86,7 +88,7 @@ namespace Trivia.Test
         public void ShouldHaveSportCategory_WhenRoll2()
         {
             
-            Game game = new Game("Patrick", "Isabelle");
+            Game game = Game.OfTwoPlayers("Patrick", "Isabelle").Build();
 
             // Patrick
             game.Roll(DiceRoll.Two);
@@ -98,7 +100,7 @@ namespace Trivia.Test
         public void ShouldHaveRockCategory_WhenRoll3()
         {
             
-            Game game = new Game("Patrick", "Isabelle");
+            Game game = Game.OfTwoPlayers("Patrick", "Isabelle").Build();
 
             // Patrick
             game.Roll(DiceRoll.Three);
@@ -110,7 +112,7 @@ namespace Trivia.Test
         [Fact]
         public void ShouldBeOutOfPenaltyBox_WhenRoll1AndOutOfPenaltyBox()
         {
-            Game game = new Game("Patrick", "Isabelle");
+            Game game = Game.OfTwoPlayers("Patrick", "Isabelle").Build();
             game.Roll(DiceRoll.One);
             Assert.False(game.GetPlayerStatus(0).IsInPenaltyBox);
         }
@@ -118,7 +120,7 @@ namespace Trivia.Test
         [Fact]
         public void ShouldBeOutOfPenaltyBox_WhenRoll2AndOutOfPenaltyBox()
         {
-            Game game = new Game("Patrick", "Isabelle");
+            Game game = Game.OfTwoPlayers("Patrick", "Isabelle").Build();
             game.Roll(DiceRoll.Two);
             Assert.False(game.GetPlayerStatus(0).IsInPenaltyBox);
         }
@@ -126,7 +128,7 @@ namespace Trivia.Test
         [Fact]
         public void ShouldBeOutOfPenaltyBox_WhenCorrectlyAnsweredAndOutOfPenaltyBox()
         {
-            Game game = new Game("Patrick", "Isabelle");
+            Game game = Game.OfTwoPlayers("Patrick", "Isabelle").Build();
             game.Roll(DiceRoll.One);
             game.WasCorrectlyAnswered();
             Assert.False(game.GetPlayerStatus(0).IsInPenaltyBox);
@@ -135,7 +137,7 @@ namespace Trivia.Test
         [Fact]
         public void ShouldBeInPenaltyBox_WhenWronglyAnsweredAndOutOfPenaltyBox()
         {
-            Game game = new Game("Patrick", "Isabelle");
+            Game game = Game.OfTwoPlayers("Patrick", "Isabelle").Build();
             game.Roll(DiceRoll.One);
             game.WasWronglyAnswered();
             Assert.True(game.GetPlayerStatus(0).IsInPenaltyBox);
@@ -144,7 +146,7 @@ namespace Trivia.Test
         [Fact]
         public void ShouldBeInPenaltyBox_WhenRoll1AndInPenaltyBoxAndWrongAnswer()
         {
-            Game game = new Game("Patrick", "Isabelle");
+            Game game = Game.OfTwoPlayers("Patrick", "Isabelle").Build();
             game.Roll(DiceRoll.One);
             game.WasWronglyAnswered();
             game.Roll(DiceRoll.One);
@@ -157,7 +159,7 @@ namespace Trivia.Test
         [Fact]
         public void ShouldBeOutOfPenaltyBox_WhenRoll1AndInPenaltyBoxAndCorrectAnswer()
         {
-            Game game = new Game("Patrick", "Isabelle");
+            Game game = Game.OfTwoPlayers("Patrick", "Isabelle").Build();
             game.Roll(DiceRoll.One);
             game.WasWronglyAnswered();
             game.Roll(DiceRoll.One);
@@ -170,7 +172,7 @@ namespace Trivia.Test
         [Fact]
         public void ShouldBeOutOfPenaltyBox_WhenRoll2AndInPenaltyBox()
         {
-            Game game = new Game("Patrick", "Isabelle");
+            Game game = Game.OfTwoPlayers("Patrick", "Isabelle").Build();
             game.Roll(DiceRoll.One);
             game.WasWronglyAnswered();
             game.Roll(DiceRoll.One);

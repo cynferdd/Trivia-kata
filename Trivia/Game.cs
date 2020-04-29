@@ -16,21 +16,16 @@ namespace Trivia
 
         private readonly CircularIterator<Player> playersStatus = new CircularIterator<Player>();
 
-        private readonly Deck popDeck = new Deck("Pop");
-        private readonly Deck scienceDeck = new Deck("Science");
-        private readonly Deck sportsDeck = new Deck("Sports");
-        private readonly Deck rockDeck = new Deck("Rock");
+        
 
         private readonly CircularIterator<Deck> gameBoard = new CircularIterator<Deck>();
 
 
         public Player GetPlayerStatus(int i) => playersStatus[i];
 
-        private Game(IReadOnlyList<string> players)
+        private Game(IReadOnlyList<string> players, DeckCollection decks)
         {
-            DeckCollection decks = new DeckCollection();
             
-
             gameBoard =
                 Enumerable
                     .Repeat(decks, 3)
@@ -52,23 +47,6 @@ namespace Trivia
             this.visitor = logger;
         }
 
-        public Game(string player1, string player2)
-            :this(new[] { player1, player2}) { }
-
-
-        public Game(string player1, string player2, string player3)
-            : this(new[] { player1, player2, player3 }) { }
-
-        public Game(string player1, string player2, string player3, string player4)
-            : this(new[] { player1, player2, player3, player4 }) { }
-
-        public Game(string player1, string player2, string player3, string player4, string player5)
-            : this(new[] { player1, player2, player3, player4, player5 }) { }
-
-        public Game(string player1, string player2, string player3, string player4, string player5, string player6)
-            : this(new[] { player1, player2, player3, player4, player5, player6 }){}
-
-        
         
 
         public void Roll(DiceRoll diceRoll)
@@ -167,7 +145,54 @@ namespace Trivia
             return !(playersStatus.Current.Purse == VictoryPurseAmount);
         }
 
+        public static IDeckBuilder OfTwoPlayers(string player1, string player2) => 
+            new Builder(player1, player2);
+        public static IDeckBuilder OfThreePlayers(string player1, string player2, string player3) => 
+            new Builder(player1, player2, player3);
+        public static IDeckBuilder OfFourPlayers(string player1, string player2, string player3, string player4) => 
+            new Builder(player1, player2, player3, player4);
+        public static IDeckBuilder OfFivePlayers(string player1, string player2, string player3, string player4, string player5) => 
+            new Builder(player1, player2, player3, player4, player5);
+        public static IDeckBuilder OfSixPlayers(string player1, string player2, string player3, string player4, string player5, string player6) => 
+            new Builder(player1, player2, player3, player4, player5, player6);
+
+        public interface IBuilder
+        {
+            
+
+            Game Build();
+        }
+
         
+
+        public interface IDeckBuilder: IBuilder
+        {
+            IBuilder Decks(DeckCollection deckCollection);
+        }
+
+
+        private class Builder : IBuilder, IDeckBuilder
+        {
+            private DeckCollection deckCollection = new DeckCollection();
+            IReadOnlyList<string> players;
+
+            public Builder(params string[] players)
+            {
+                this.players = players;
+            }
+            public IBuilder Decks(DeckCollection deckCollection)
+            {
+                this.deckCollection = deckCollection;
+                return this;
+            }
+
+            public Game Build()
+            {
+                return new Game(players, this.deckCollection);
+            }
+
+            
+        }
     }
 
 }
