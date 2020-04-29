@@ -42,6 +42,7 @@ namespace Trivia.Test
         public void ShouldGainCoin_WhenFirstAnswerIsWrongAndSecondAnswerIsCorrect()
         {
             Game game = new Game("Patrick", "Isabelle");
+
             // Patrick
             game.Roll(DiceRoll.One);
             game.WasWronglyAnswered();
@@ -60,6 +61,7 @@ namespace Trivia.Test
         public void ShouldHavePopCategory_WhenRoll4()
         {
             Game game = new Game("Patrick", "Isabelle");
+
             // Patrick
             game.Roll(DiceRoll.Four);
             var actual = game.CurrentCategory();
@@ -72,6 +74,7 @@ namespace Trivia.Test
         {
             
             Game game = new Game("Patrick", "Isabelle");
+
             // Patrick
             game.Roll(DiceRoll.One);
             var actual = game.CurrentCategory();
@@ -84,6 +87,7 @@ namespace Trivia.Test
         {
             
             Game game = new Game("Patrick", "Isabelle");
+
             // Patrick
             game.Roll(DiceRoll.Two);
             var actual = game.CurrentCategory();
@@ -95,6 +99,7 @@ namespace Trivia.Test
         {
             
             Game game = new Game("Patrick", "Isabelle");
+
             // Patrick
             game.Roll(DiceRoll.Three);
             var actual = game.CurrentCategory();
