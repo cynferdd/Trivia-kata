@@ -11,6 +11,8 @@ namespace Trivia
 
         private const int VictoryPurseAmount = 6;
 
+        private IGameVisitor visitor;
+        
 
         private readonly CircularIterator<Player> playersStatus = new CircularIterator<Player>();
 
@@ -26,7 +28,7 @@ namespace Trivia
 
         private Game(IReadOnlyList<string> players)
         {
-
+            
             var decks = new[] { popDeck, scienceDeck, sportsDeck, rockDeck };
 
             gameBoard =
@@ -39,11 +41,15 @@ namespace Trivia
 
             for (int i = 0; i < playersStatus.Count; i++)
             {
-
-                Console.WriteLine(playersStatus[i].Name + " was Added");
-                Console.WriteLine("They are player number " + i);
+                visitor?.PlayerCreation(playersStatus[i].Name, i);
             }
 
+        }
+
+        
+        public void Accept(IGameVisitor logger)
+        {
+            this.visitor = logger;
         }
 
         public Game(string player1, string player2)
@@ -68,19 +74,14 @@ namespace Trivia
         public void Roll(DiceRoll diceRoll)
         {
             int roll = (int)diceRoll;
-            Console.WriteLine(playersStatus.Current.Name + " is the current player");
-            Console.WriteLine("They have rolled a " + roll);
+            visitor?.CurrentPlayerRoll(playersStatus.Current.Name, roll);
 
             var stayInPenaltyBox = roll % 2 == 0;
             bool isInPenaltyBox = playersStatus.Current.IsInPenaltyBox;
 
             if (isInPenaltyBox)
             {
-                Console.WriteLine(
-                    playersStatus.Current.Name +
-                    " is " +
-                    (stayInPenaltyBox ? "not" :"" ) +
-                    "getting out of the penalty box");
+                visitor?.CurrentPlayerPenaltyBoxState(playersStatus.Current.Name, stayInPenaltyBox);
 
                 playersStatus.Current.IsInPenaltyBox = stayInPenaltyBox;
 
@@ -95,25 +96,25 @@ namespace Trivia
 
         }
 
+        
 
         private void Move(int roll)
         {
-            playersStatus.Current.Position = gameBoard.GetIndex(roll + playersStatus.Current.Position);
-            
+            Player current = playersStatus.Current;
+            current.Position = gameBoard.GetIndex(roll + current.Position);
 
-            Console.WriteLine(playersStatus.Current.Name
-                                        + "'s new location is "
-                                        + playersStatus.Current.Position);
-            Console.WriteLine("The category is " + gameBoard[playersStatus.Current.Position].Category);
+            visitor?.MovePlayer(current.Name, current.Position, gameBoard[current.Position].Category);
         }
+
+        
 
         private void AskQuestion()
         {
-            Console.WriteLine(
-                gameBoard[playersStatus.Current.Position]
-                .PickQuestion());
+            string question = gameBoard[playersStatus.Current.Position].PickQuestion();
+            visitor?.AskQuestion(question);
         }
 
+        
 
         public string CurrentCategory()
         {
@@ -139,24 +140,22 @@ namespace Trivia
 
         private void CorrectAnswerStatement()
         {
-            Console.WriteLine("Answer was correct!!!!");
 
             playersStatus.Current.IncreasePurse();
-
-            Console.WriteLine(playersStatus.Current.Name
-                    + " now has "
-                    + playersStatus.Current.Purse
-                    + " Gold Coins.");
+            visitor?.CorrectAnswer(playersStatus.Current.Name, playersStatus.Current.Purse);
         }
+
+        
 
         public bool WasWronglyAnswered()
         {
-            Console.WriteLine("Question was incorrectly answered");
-            Console.WriteLine(playersStatus.Current.Name + " was sent to the penalty box");
+            visitor?.WrongAnswer(playersStatus.Current.Name);
             playersStatus.Current.IsInPenaltyBox = true;
             GoToNextPlayer();
             return true;
         }
+
+        
 
         private void GoToNextPlayer()
         {
