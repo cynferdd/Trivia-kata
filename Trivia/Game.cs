@@ -28,8 +28,8 @@ namespace Trivia
 
         private Game(IReadOnlyList<string> players)
         {
+            DeckCollection decks = new DeckCollection();
             
-            var decks = new[] { popDeck, scienceDeck, sportsDeck, rockDeck };
 
             gameBoard =
                 Enumerable
