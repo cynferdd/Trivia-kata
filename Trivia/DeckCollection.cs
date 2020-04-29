@@ -13,7 +13,7 @@ namespace Trivia
         private readonly Deck sportsDeck = new Deck("Sports");
         private readonly Deck rockDeck = new Deck("Rock");
 
-        public List<Deck> Decks = new List<Deck>();
+        private List<Deck> Decks = new List<Deck>();
 
         public DeckCollection()
         {
